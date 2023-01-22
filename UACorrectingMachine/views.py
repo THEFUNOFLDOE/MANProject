@@ -20,14 +20,13 @@ def index(request):
                   context={'form': form, 'searches': dict(zip(found, doc_ids))})
 
 
-def view_found(request, index):
+def found(request, index):
     doc = str(CORPUS.get_doc(f'{index:>04}').annotated)
     return render(request,
-                  'UACorrectingMachine/view_found.html',
+                  'UACorrectingMachine/found.html',
                   context={'doc': show_corrections(doc)})
 
 
 def about(request):
     return render(request,
                   'UACorrectingMachine/about.html')
-

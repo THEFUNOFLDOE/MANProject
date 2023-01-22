@@ -1,14 +1,21 @@
 {% include 'UACorrectingMachine/base.html' %}
 {% load static %}
 {% block content %}
-    <form action="{% url 'home' %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit" id="sendButton">
-    </form>
-    {% for found, doc_id in searches.items %}
-        <a class="btn btn-primary" style="background: #4ac1f7" href="{% url 'found' doc_id %}">{{ found }}</a>
-        <br><br>
-    {% endfor %}
-    <script src="{% static 'js/main.js' %}"></script>
+    <div class="container text-center">
+        <div class="row">
+            <div class="col">
+                <form action="{% url 'home' %}" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-primary" type="submit" value="Submit">Перевірити!</button>
+                </form>
+            </div>
+            <div class="col">
+                {% for found, doc_id in searches.items %}
+                    <a class="btn btn-primary btn-lg" style="background: #4ac1f7" href="{% url 'found' doc_id %}">{{ found }}</a>
+                    <br><br>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
