@@ -1,30 +1,22 @@
 from django.shortcuts import render
 from .forms import UACorrectingMachineSearchForm
-from .functions import CORPUS, show_corrections
+from .model.model import predict_correction
 
 
 def index(request):
-    found = []
-    doc_ids = []
     if request.POST:
         form = UACorrectingMachineSearchForm(request.POST)
-
-        for doc in CORPUS:
-            if form.data.get('search') in doc.source:
-                found.append(f'{str(doc.target)[:100]}...')
-                doc_ids.append(doc.doc_id)
+        txt_for_correction = form.data.get("txt_for_correction")
+        nn_numb_predicts = int(form.data.get("nn_numb_predicts"))
+        return render(request,
+                      'UACorrectingMachine/found.html',
+                      context={'result': predict_correction(text=txt_for_correction,
+                                                            num_return_sequences=nn_numb_predicts)})
     else:
         form = UACorrectingMachineSearchForm
     return render(request,
                   'UACorrectingMachine/index.html',
-                  context={'form': form, 'searches': dict(zip(found, doc_ids))})
-
-
-def found(request, index):
-    doc = str(CORPUS.get_doc(f'{index:>04}').annotated)
-    return render(request,
-                  'UACorrectingMachine/found.html',
-                  context={'doc': show_corrections(doc)})
+                  context={'form': form})
 
 
 def about(request):
