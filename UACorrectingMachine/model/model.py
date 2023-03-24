@@ -23,9 +23,6 @@ def highlight_text(text, color='yellow', padding='0.45em', margin='0.1em'):
     return string
 
 
-
-
-
 # Tokenizer parameters
 max_token_length = 50
 tokenizer_dict = dict(return_tensors = 'pt',
