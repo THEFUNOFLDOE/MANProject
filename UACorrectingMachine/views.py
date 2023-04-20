@@ -27,3 +27,18 @@ def render_check(request, text, nn_numb_predicts):
                   'UACorrectingMachine/checked.html',
                   context={'result': predict_correction(text=text,
                                                         num_return_sequences=nn_numb_predicts)})
+
+def render_example(request, id):
+    num_return_sequences=6
+    text=''
+    match id:
+        case 1:
+            text='Це самий лучший день'
+        case 2:
+            text='Степанко радий старатися хоч і страшнувато було'
+        case _:
+            text='я й не думав що лінгвістика це легко'
+    return render(request,
+                  'UACorrectingMachine/checked.html',
+                  context={'result': predict_correction(text=text,
+                                                        num_return_sequences=num_return_sequences)})

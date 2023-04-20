@@ -2,11 +2,12 @@ import difflib as dl
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from functools import partial
 from torch import device, cuda
+from MANProject.settings import BASE_DIR
 
 
 model_name = "schhwmn/mbart-large-50-finetuned-ukr-gec"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name, cache_dir=BASE_DIR)
 device = device("cuda" if cuda.is_available() else "cpu")
 
 
