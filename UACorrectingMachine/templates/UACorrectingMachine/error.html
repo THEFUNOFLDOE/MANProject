@@ -1,0 +1,14 @@
+{% extends 'UACorrectingMachine/base.html' %}
+{% load static %}
+
+{% block styles%}
+<link href="{% static 'UACorrectingMachine/css/error.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+<div id="main">
+    <div class="sthWentWrong">
+        <p>Ой-йой, щось пішло не так! Перевірте ваші вхідні дані!</p>
+    </div>
+</div>
+{% endblock %}
