@@ -1,6 +1,48 @@
 {% extends 'UACorrectingMachine/base.html' %}
+{% load static %}
+
+{% block styles %}
+<link href="{% static 'UACorrectingMachine/css/checked.css' %}" rel="stylesheet" type="text/css">
+{% endblock%}
+
 {% block content %}
-    {% autoescape off %}
-        {{ result }}
-    {% endautoescape %}
+    <br>
+    <div class="container">    
+        <div class="row justify-content-center">
+            <div class="col-8">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div> 
+                {% endfor %}
+                {% endif %}
+            </div>    
+        </div>
+        <br>
+        <div class="row errorsAndChecksRow">
+            <div class="col">
+                <h2>Джерело</h2>
+            </div>
+            <div class="col">
+                <h2>Відредаговано</h2>
+            </div>
+        </div>
+        <br>
+        {% for error, check in result %}
+        <div class="row errorsAndChecksRow">
+            <div class="col">
+                {% autoescape off %}
+                <p>{{ error }}</p>
+                {% endautoescape %}
+            </div>
+            <div class="col">
+                {% autoescape off %}
+                <p>{{ check }}</p>
+                {% endautoescape %}
+            </div>
+        </div>
+        <br>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -1,15 +1,31 @@
 {% extends 'UACorrectingMachine/base.html' %}
+{% load static %}
+
+{% block styles %}
+<link href="{% static 'UACorrectingMachine/css/index.css' %}" rel="stylesheet" type="text/css">
+{% endblock%}
 
 {% block content %}
     <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <form action="{% url 'home' %}" method="post" class="formBetter">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-primary" type="submit" value="Submit" onclick="showMessage()">Перевірити!</button>
+                </form>
+            </div>
+            
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <div id="fadedMessage" class="alert alert-success fade" role="alert">
+                    <span>Ваші дані отримано. Триває обробка.</span>
+                </div>
+            </div>
+            
+        </div>
         <div class="row">
-            <form action="{% url 'home' %}" method="post" style="margin-bottom: 1em;">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn btn-primary" type="submit" value="Submit">Перевірити!</button>
-            </form>
-            <br>
-
             <div class="col">
                 <h4>Приклад 1</h4>
                 <p>Це самий лучший день</p>
@@ -27,4 +43,5 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'UACorrectingMachine/js/index.js' %}"></script>
 {% endblock %}

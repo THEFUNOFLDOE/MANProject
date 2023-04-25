@@ -12,15 +12,10 @@ model = AutoModelForSeq2SeqLM.from_pretrained(model_name, cache_dir=os.path.join
 device = device("cuda" if cuda.is_available() else "cpu")
 
 
-def highlight_text(text, color='yellow', padding='0.45em', margin='0.1em'):
+def highlight_text(text, class_type):
     """Add html markup & css style before and after text"""
 
-    string = f'''<mark style="background: {color};
-                  padding: {padding};
-                  line-height: 2.5;
-                  text_align: center;
-                  border-radius: 0.35em;
-                  margin: {margin};">{text}</mark>'''
+    string = f'''<mark class="{class_type}">{text}</mark>'''
 
     return string
 
@@ -50,28 +45,11 @@ def predict_sequences(text, num_return_sequences, model, tokenizer, tokenizer_kw
     # Decode model's output 
     output_strings = tokenizer.batch_decode(output_ids, skip_special_tokens=True)
     
-    # === HTML-markup ===
-    
-    # Add html-headers
-    s1_header = 'Джерело'
-    s2_header = 'Виправлено'
-    
-    # Div container for two rows
-    html = '''
-    <div style="display:flex; 
-    flex-direction: row; 
-    text-align: justify;
-    border-radius: 7px;
-    border: 2px dashed #8e9aaf;
-    padding: 28px;">
-    '''
-    
-    # Contents of the first, second columns respectively
-    col1_html = f'''<div style="margin: 0 1em; width: 50%;"><h3>{s1_header}</h3>'''
-    col2_html = f'''<div style="margin: 0 1em; width: 50%;"><h3>{s2_header}</h3>'''
+    markup_errors = []
+    markup_checks = []
     
     for output_str in output_strings:
-        markup_s1, markup_s2 = '', ''
+        markup_error, markup_check = '', ''
         
         # Use difflib module to find differences in two strings
         seq_matcher = dl.SequenceMatcher(None, text, output_str)
@@ -80,22 +58,18 @@ def predict_sequences(text, num_return_sequences, model, tokenizer, tokenizer_kw
         for tag, i1, i2, j1, j2 in seq_matcher.get_opcodes():
             # Add equal elements without change
             if tag == 'equal':
-              markup_s1 += text[i1:i2]
-              markup_s2 += output_str[j1:j2]
+              markup_error += text[i1:i2]
+              markup_check += output_str[j1:j2]
             # Add changed chunks with html-markup
             else:
-              markup_s1 += highlight_text(text[i1:i2], '#ffa8B6', padding='0.2em', margin='0')
-              markup_s2 += highlight_text(output_str[j1:j2], '#9df9ef', padding='0.2em', margin='0')
-                
-        col1_html += f'''<p>{markup_s1}</p>'''
-        col2_html += f'''<p>{markup_s2}</p>'''
+              markup_error += highlight_text(text[i1:i2], "errorSign")
+              markup_check += highlight_text(output_str[j1:j2], "checkedSign")
         
-    col1_html += '</div>'
-    col2_html += '</div>'
-    
-    html += col1_html + col2_html + '</div>'
+        markup_errors.append(markup_error)
+        markup_checks.append(markup_check)
+        
             
-    return html
+    return (markup_errors, markup_checks)
 
 
 predict_correction = partial(predict_sequences,
