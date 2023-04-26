@@ -41,16 +41,17 @@ def instruction(request):
                   'UACorrectingMachine/instruction.html')
 
 def render_example(request, id):
-    num_return_sequences=6
+    nn_numb_predicts=6
     text=''
-    match id:
-        case 1:
-            text='Це самий лучший день'
-        case 2:
-            text='Степанко радий старатися хоч і страшнувато було'
-        case _:
-            text='я й не думав що лінгвістика це легко'
+    if id == 1:
+        text='Це самий лучший день'
+    elif id == 2:
+        text='Степанко радий старатися хоч і страшнувато було'
+    else:
+        text='я й не думав що лінгвістика це легко'
+
+    nn_prediction = tuple(zip(*predict_correction(text=text, num_return_sequences=nn_numb_predicts)))
+
     return render(request,
                   'UACorrectingMachine/checked.html',
-                  context={'result': predict_correction(text=text,
-                                                        num_return_sequences=num_return_sequences)})
+                  context={'result': nn_prediction})
